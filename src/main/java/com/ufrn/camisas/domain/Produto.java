@@ -1,6 +1,5 @@
 package com.ufrn.camisas.domain;
 
-
 import java.util.List;
 
 import com.ufrn.camisas.controller.ProdutoController;
@@ -16,7 +15,6 @@ import org.springframework.hateoas.RepresentationModel;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,7 +25,11 @@ public class Produto extends AbstractEntity {
     private String nomeProduto;
     private int precoProduto;
 
-    @ManyToMany(mappedBy = "produtos") // Correção: alterado o valor de 'mappedBy' para 'produtos'
+    /*
+    * Mapeamento ManyToMany
+    * ## Testar ##
+    * */
+    @ManyToMany(mappedBy = "produtos")
     private List<Pedido> pedidos;
 
     @Override

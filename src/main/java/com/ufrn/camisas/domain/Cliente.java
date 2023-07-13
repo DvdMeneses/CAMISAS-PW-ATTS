@@ -10,8 +10,6 @@
 
 package com.ufrn.camisas.domain;
 
-
-import java.util.Date;
 import java.util.List;
 
 import com.ufrn.camisas.controller.ClienteController;
@@ -43,7 +41,11 @@ public class Cliente extends AbstractEntity {
 
     String cpf; // Corrigido: alterado o tipo para Date
 
-    @OneToMany(mappedBy = "cliente") // Corrigido: mapeando o atributo "cliente" na classe Pedido
+    /*
+    * Correção: adicionado @JoinColumn
+    * */
+    @OneToMany
+    @JoinColumn(name = "id_cliente")
     List<Pedido> pedidos;
 
     @Override
