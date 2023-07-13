@@ -13,13 +13,15 @@ public class ClienteController {
     ClienteService service;
     ModelMapper mapper;
 
-    // Construtor
+    /* Construtor */
     public ClienteController(ClienteService service, ModelMapper mapper){
         this.service = service;
         this.mapper = mapper;
     }
 
-    // CRIAR
+    /*
+     * Criar cliente
+     * */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente.DtoResponse create(@RequestBody Cliente.DtoRequest c){
@@ -30,7 +32,9 @@ public class ClienteController {
         return response;
     }
 
-    // Listar
+    /*
+     * Listagem de cliente
+     * */
     @GetMapping
     public List<Cliente.DtoResponse> list(){
 
@@ -42,7 +46,9 @@ public class ClienteController {
                 }).toList();
     }
 
-    // Buscar por id
+    /*
+     * Buscar cliente por id
+     * */
     @GetMapping("{id}")
     public Cliente.DtoResponse getByid(@PathVariable Long id){
 
@@ -52,7 +58,9 @@ public class ClienteController {
         return response;
     }
 
-    // atualizar
+    /*
+     * Atualizar cliente
+     * */
     @PutMapping("{id}")
     public Cliente.DtoResponse update(@RequestBody Cliente.DtoRequest dtoRequest, @PathVariable Long id){
         System.out.println(id);
@@ -62,7 +70,9 @@ public class ClienteController {
         return response;
     }
 
-    // delete
+    /*
+     * Deletar cliente
+     * */
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Long id ){

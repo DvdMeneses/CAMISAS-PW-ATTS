@@ -16,13 +16,16 @@ public class EnvioController {
     EnvioService service;
     ModelMapper mapper;
 
+    /* Construtor */
     public EnvioController(EnvioService service, ModelMapper mapper){
         this.service = service;
         this.mapper = mapper;
     }
 
 
-    // CRIAR
+    /*
+    * Criar envio
+    * */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Envio.DtoResponse create(@RequestBody Envio.DtoRequest e){
@@ -32,8 +35,9 @@ public class EnvioController {
         return response;
     }
 
-
-    //Listar
+    /*
+    * Listagem de envio
+    * */
     @GetMapping
     public List<Envio.DtoResponse> list(){
         return this.service.list().stream().map(
@@ -45,6 +49,9 @@ public class EnvioController {
                 }).toList();
     }
 
+    /*
+    * Buscar envio por id
+    * */
     @GetMapping("{id}")
     public Envio.DtoResponse getById(@PathVariable Long id) {
         Envio envio = this.service.getById(id);
@@ -53,19 +60,22 @@ public class EnvioController {
         return response;
     }
 
+    /*
+    * Atualizar envio
+    * */
     @PutMapping("{id}")
-    public Envio.DtoResponse update(@RequestBody Envio.DtoRequest dtoRequest,@PathVariable Long id){
-
-        Envio e = Envio.DtoRequest.convertToEntity(dtoRequest, mapper);
-        Envio.DtoResponse response = Envio.DtoResponse.convertToDto(this.service.update(e,id), mapper);
-
+    public Envio.DtoResponse update(@RequestBody Envio.DtoRequest e,@PathVariable Long id){
+        Envio envio = Envio.DtoRequest.convertToEntity(e, mapper);
+        Envio.DtoResponse response = Envio.DtoResponse.convertToDto(this.service.update(envio,id), mapper);
         return response;
     }
 
+    /*
+     * Deletar envio
+     * */
     @DeleteMapping("{id}")
     public void delete(@PathVariable Long id){
         this.service.delete(id);
-
     }
 
 
