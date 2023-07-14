@@ -1,10 +1,3 @@
-//ERROS:
-// verificar erro aqui
-//  @ManyToMany
-// @JoinTable(name = "pedido_produto",
-//         joinColumns = @JoinColumn(name = "id_pedido"),
-//       inverseJoinColumns = @JoinColumn(name = "produto_id"))
-//private List<Produto> produtos;
 package com.ufrn.camisas.domain;
 
 import java.util.ArrayList;
@@ -18,6 +11,7 @@ import com.ufrn.camisas.service.ClienteService;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.SQLSelect;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.RepresentationModel;
 

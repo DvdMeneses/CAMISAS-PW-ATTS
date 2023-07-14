@@ -1,13 +1,3 @@
-//ERROS:
-//@GeneratedValue(strategy = GenerationType.IDENTITY)
-//String nome;
-
-//Date DataDeNascimento;
-//errado:
-//@OneToMany
-//@JoinColumn(name = "id_Pedido")
-//private List<Pedido> pedidos;
-
 package com.ufrn.camisas.domain;
 
 import java.util.List;
@@ -23,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import lombok.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
