@@ -74,6 +74,7 @@ public class Pedido extends AbstractEntity {
     @Data
     public static class DtoResponse extends RepresentationModel<DtoResponse>{
         private Cliente cliente;
+
         private List<Produto> produtos;
 
         public static Pedido.DtoResponse convertToDto(Pedido p, ModelMapper mapper){

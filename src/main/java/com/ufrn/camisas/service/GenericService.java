@@ -31,7 +31,9 @@ public abstract class GenericService<E extends AbstractEntity, R extends IGeneri
 
     @Override
     public E create(E e) {
+        System.out.println("service aqui");
         return (E) this.repository.save(e);
+
     }
 
     public E createPedido(E e) {
