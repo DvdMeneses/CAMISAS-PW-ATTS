@@ -6,6 +6,7 @@ import com.ufrn.camisas.controller.ProdutoController;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,7 +24,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class Produto extends AbstractEntity {
 
     private String nomeProduto;
-    private int precoProduto;
+
+   @NotNull
+    private Integer precoProduto;
 
     /*
     * Mapeamento ManyToMany
@@ -35,6 +38,11 @@ public class Produto extends AbstractEntity {
     @Override
     public void partialUpdate(AbstractEntity e) {
         if (e instanceof Produto produto){
+
+            if(produto.nomeProduto.equals("Nome em Branco") || produto.precoProduto == 0){
+
+                throw new NullPointerException ("campo null invalido");
+            }
             this.nomeProduto = produto.nomeProduto;
             this.precoProduto = produto.precoProduto;
             this.pedidos = produto.pedidos;
@@ -45,8 +53,8 @@ public class Produto extends AbstractEntity {
     public static class DtoRequest {
         @NotBlank(message = "Produto com nome em branco")
         String nomeProduto;
-        @NotBlank(message = "Produto com preco vazio")
-        int precoProduto;
+        @NotNull(message = "Produto com preco vazio")
+        Integer precoProduto;
 
         public static Produto convertToEntity(DtoRequest dto, ModelMapper mapper) {
             return mapper.map(dto, Produto.class);
@@ -56,7 +64,7 @@ public class Produto extends AbstractEntity {
     @Data
     public static class DtoResponse extends RepresentationModel<DtoResponse> {
         String nomeProduto;
-        int precoProduto;
+        Integer precoProduto;
 
         public static DtoResponse convertToDto(Produto p, ModelMapper mapper) {
             return mapper.map(p, DtoResponse.class);

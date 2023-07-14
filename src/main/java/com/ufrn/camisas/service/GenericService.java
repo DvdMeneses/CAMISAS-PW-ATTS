@@ -1,6 +1,9 @@
 package com.ufrn.camisas.service;
 
 import com.ufrn.camisas.domain.AbstractEntity;
+import com.ufrn.camisas.domain.Cliente;
+import com.ufrn.camisas.domain.Pedido;
+import com.ufrn.camisas.domain.Produto;
 import com.ufrn.camisas.repository.IGenericRepository;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -28,6 +31,15 @@ public abstract class GenericService<E extends AbstractEntity, R extends IGeneri
 
     @Override
     public E create(E e) {
+        return (E) this.repository.save(e);
+    }
+
+    public E createPedido(E e) {
+        Pedido pedido  = (Pedido) getById(e.getId());
+        Cliente cliente;
+        cliente =  (Cliente) getById(pedido.getCliente().getId());
+        pedido.setCliente(cliente);
+        System.out.println("service aqui");
         return (E) this.repository.save(e);
     }
 

@@ -1,5 +1,7 @@
 package com.ufrn.camisas.controller;
 
+import com.ufrn.camisas.domain.Cliente;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +34,10 @@ public class PedidoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Pedido.DtoResponse create(@RequestBody Pedido.DtoRequest p){
+
         Pedido pedido = this.service.create(Pedido.DtoRequest.convertToEntity(p, mapper));
+        System.out.println(pedido.getCliente().getId());
+
         Pedido.DtoResponse response = Pedido.DtoResponse.convertToDto(pedido, mapper);
         response.generateLinks(pedido.getId());
         return response;

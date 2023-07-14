@@ -4,6 +4,7 @@ import com.ufrn.camisas.controller.ClienteController;
 import com.ufrn.camisas.controller.EnvioController;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.RepresentationModel;
@@ -19,9 +20,9 @@ public class Envio extends AbstractEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Corrigido: adicionada a definição do ID
-
+    @NotNull(message = "Forma de Envio vazia")
     private String formaEnvio;
-
+    @NotNull
     private String endereco;
 
     @OneToOne
@@ -30,7 +31,10 @@ public class Envio extends AbstractEntity{
 
     @Override
     public void partialUpdate(AbstractEntity e) {
-        if (e instanceof Envio envio){
+        if (e instanceof Envio envio){// tratamento para nao nulo
+            if(envio.formaEnvio.equals("Forma de Envio vazia") || envio.endereco == null){
+                throw new RuntimeException("campo null invalido");
+            }
             this.formaEnvio = envio.formaEnvio;
             this.endereco = envio.endereco;
             this.pedido = envio.pedido;

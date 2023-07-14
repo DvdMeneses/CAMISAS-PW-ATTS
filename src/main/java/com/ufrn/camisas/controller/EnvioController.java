@@ -6,6 +6,7 @@ import com.ufrn.camisas.service.EnvioService;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class EnvioController {
     * */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Envio.DtoResponse create(@RequestBody Envio.DtoRequest e){
+    public Envio.DtoResponse create(@RequestBody @Valid Envio.DtoRequest e){
         Envio envio = this.service.create(Envio.DtoRequest.convertToEntity( e, mapper));
         Envio.DtoResponse response = Envio.DtoResponse.convertToDto(envio,mapper);
         response.generateLinks(envio.getId());

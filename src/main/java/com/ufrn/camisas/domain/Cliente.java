@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.ufrn.camisas.controller.ClienteController;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.hateoas.RepresentationModel;
@@ -38,7 +39,7 @@ public class Cliente extends AbstractEntity {
 
     @NotBlank(message = "Nome em Branco")
     String nome;
-
+    @NotBlank
     String cpf; // Corrigido: alterado o tipo para Date
 
     /*
@@ -50,7 +51,11 @@ public class Cliente extends AbstractEntity {
 
     @Override
     public void partialUpdate(AbstractEntity e) {
-        if (e instanceof Cliente cliente){
+        if (e instanceof Cliente cliente){// tratamento para nao nulo
+            if(cliente.nome.equals("Nome em Branco") || cliente.cpf == null){
+
+                throw new NullPointerException ("campo null invalido");
+            }
             this.nome = cliente.nome;
             this.cpf = cliente.cpf;
             this.pedidos = cliente.pedidos;

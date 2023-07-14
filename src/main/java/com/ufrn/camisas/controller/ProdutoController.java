@@ -2,6 +2,7 @@ package com.ufrn.camisas.controller;
 
 import com.ufrn.camisas.domain.Produto;
 import com.ufrn.camisas.service.ProdutoService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class ProdutoController {
      * */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Produto.DtoResponse create(@RequestBody Produto.DtoRequest p) {
+    public Produto.DtoResponse create(@RequestBody @Valid Produto.DtoRequest p) {
         Produto produto = this.service.create(Produto.DtoRequest.convertToEntity(p, mapper));
         Produto.DtoResponse response = Produto.DtoResponse.convertToDto(produto, mapper);
         response.generateLinks(produto.getId());

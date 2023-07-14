@@ -7,10 +7,14 @@
 //private List<Produto> produtos;
 package com.ufrn.camisas.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ufrn.camisas.controller.EnvioController;
+import com.ufrn.camisas.domain.Cliente;
+import com.ufrn.camisas.domain.Produto;
 import com.ufrn.camisas.controller.PedidoController;
+import com.ufrn.camisas.service.ClienteService;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -25,14 +29,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Data
 @Entity
 public class Pedido extends AbstractEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Corrigido: adicionada a definição do ID
 
-    @ManyToOne // Corrigido: alterado para ManyToOne para representar a associação correta
-    @JoinColumn(name = "idCliente") // Corrigido: definido o nome da coluna corretamente
-    private Cliente cliente; // Corrigido: adicionado o atributo cliente para representar a associação correta
+    /* Um cliente pode ter muitos pedidos e um pedido so é para um cliente*/
+    @ManyToOne
+    @JoinColumn(name = "id_cliente")
+    private Cliente cliente;
+
 
     /*
     * Correção: adição do 'referencedColumnName' - referência da coluna 'id_pedido' com o id de Pedido.class
@@ -46,8 +51,11 @@ public class Pedido extends AbstractEntity {
 
 
     @Override
-    public void partialUpdate(AbstractEntity e) {
+    public void partialUpdate(AbstractEntity e) {// tratamento para nao nulo
         if (e instanceof Pedido pedido){
+            if(pedido.cliente.cpf == null || pedido.produtos == null){
+                throw new RuntimeException("campo null invalido");
+            }
             this.cliente = pedido.cliente;
             this.produtos = pedido.produtos;
         }
@@ -69,12 +77,12 @@ public class Pedido extends AbstractEntity {
             return mapper.map(dto, Pedido.class);
         }
     }
-
+    @Data
     public static class DtoResponse extends RepresentationModel<DtoResponse>{
         private Cliente cliente;
         private List<Produto> produtos;
 
-        public static DtoResponse convertToDto(Pedido p, ModelMapper mapper){
+        public static Pedido.DtoResponse convertToDto(Pedido p, ModelMapper mapper){
             return mapper.map(p, DtoResponse.class);
         }
 
@@ -83,5 +91,11 @@ public class Pedido extends AbstractEntity {
             add(linkTo(PedidoController.class).withRel("pedido"));
             add(linkTo(PedidoController.class).slash(id).withRel("delete"));
         }
+
+        public static Envio.DtoResponse convertToDto(Envio e, ModelMapper mapper){
+            return  mapper.map(e, Envio.DtoResponse.class);
+        }
+
+
     }
 }
