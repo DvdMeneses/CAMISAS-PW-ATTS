@@ -25,9 +25,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class Pedido extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Corrigido: adicionada a definição do ID
+    private Long id;
 
-    /* Um cliente pode ter muitos pedidos e um pedido so é para um cliente*/
     @ManyToOne
     @JoinColumn(name = "id_cliente")
      Cliente cliente;
@@ -38,45 +37,31 @@ public class Pedido extends AbstractEntity {
             joinColumns = @JoinColumn(name = "id_pedido", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "id_produto", referencedColumnName = "id")
     )
-
-     List<Produto> produtos;
-
+    List<Produto> produtos;
 
     @Override
-    public void partialUpdate(AbstractEntity e) {// tratamento para nao nulo
+    public void partialUpdate(AbstractEntity e) {
         if (e instanceof Pedido pedido){
             if(pedido.cliente.cpf == null || pedido.produtos == null){
-                throw new RuntimeException("campo null invalido");
+                throw new RuntimeException("CAMPO NULL INVALIDO");
             }
             this.cliente = pedido.cliente;
             this.produtos = pedido.produtos;
         }
     }
 
-    /*
-    * Correção: DTO Pedido
-    * ## Testar ##
-    * */
     @Data
     public static class DtoRequest {
-        //@NotNull(message = "Cliente inexistente.")
         Cliente cliente;
-
-        //@NotNull(message = "Produtos inexistentes.")
-        List<Long> id_produto;
-
+        ArrayList<Long> id_produtos;
         public static Pedido convertToEntity(DtoRequest dto, ModelMapper mapper) {
-
             return mapper.map(dto, Pedido.class);
         }
-
-
     }
     @Data
     public static class DtoResponse extends RepresentationModel<DtoResponse>{
-        private Cliente cliente;
-
-        private List<Produto> produtos;
+        Cliente cliente;
+        List<Produto> produtos;
 
         public static Pedido.DtoResponse convertToDto(Pedido p, ModelMapper mapper){
             return mapper.map(p, DtoResponse.class);
@@ -87,11 +72,5 @@ public class Pedido extends AbstractEntity {
             add(linkTo(PedidoController.class).withRel("pedido"));
             add(linkTo(PedidoController.class).slash(id).withRel("delete"));
         }
-
-        public static Envio.DtoResponse convertToDto(Envio e, ModelMapper mapper){
-            return  mapper.map(e, Envio.DtoResponse.class);
-        }
-
-
     }
 }
