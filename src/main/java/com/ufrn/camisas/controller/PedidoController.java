@@ -35,18 +35,25 @@ public class PedidoController {
     @ResponseStatus(HttpStatus.CREATED)
     public Pedido.DtoResponse create(@RequestBody Pedido.DtoRequest p){
 
-        Pedido pedido = this.service.create(Pedido.DtoRequest.convertToEntity(p, mapper));
-        System.out.println(pedido.getCliente().getId());
+        Pedido pedido = Pedido.DtoRequest.convertToEntity(p, mapper);
 
-        Pedido.DtoResponse response = Pedido.DtoResponse.convertToDto(pedido, mapper);
+        List<Produto> produtos = new ArrayList<>();//produtoRepository.findAll();
+
+
+        for (Long i : p.getId_produto()){
+            produtos.add(produtoRepository.findById(i).get());
+        }
+
+        pedido.setProdutos(produtos);
+
+        Pedido.DtoResponse response = Pedido.DtoResponse.convertToDto((Pedido) this.service.create(pedido), mapper);
         response.generateLinks(pedido.getId());
+
         return response;
     }
 
-    /*
-    * Listagem de pedidos
-    * */
-    @GetMapping
+    /* Listagem de pedidos  */
+    /*@GetMapping
     public List<Pedido.DtoResponse> list(){
         return this.service.list().stream().map(
                 elementoAtual -> {
@@ -67,9 +74,9 @@ public class PedidoController {
         return response;
     }
 
-    /*
-    * Atualizar pedido
-    * */
+
+
+    /* Atualizar pedido*/
     @PutMapping("/{id}")
     public Pedido.DtoResponse update(@RequestBody Pedido.DtoRequest p, @PathVariable Long id){
         Pedido pedido = Pedido.DtoRequest.convertToEntity(p, mapper);
@@ -78,9 +85,7 @@ public class PedidoController {
         return response;
     }
 
-    /*
-    * Deletar pedido
-    * */
+    /*Deletar pedido*/
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
         service.delete(id);

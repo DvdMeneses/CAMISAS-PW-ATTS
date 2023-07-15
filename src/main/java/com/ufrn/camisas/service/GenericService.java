@@ -19,9 +19,12 @@ public abstract class GenericService<E extends AbstractEntity, R extends IGeneri
         this.repository = repository;
     }
 
+
     @Override
     public E getById(Long id) {
+
         Optional<E> pessoaBanco = repository.findById(id);
+
         if (pessoaBanco.isPresent()){
             return (E) pessoaBanco.get();
         }else{
@@ -30,32 +33,21 @@ public abstract class GenericService<E extends AbstractEntity, R extends IGeneri
     }
 
     @Override
-    public E create(E e) {
-        System.out.println("service aqui");
+    public E create(E e){
         return (E) this.repository.save(e);
 
-    }
-
-    public E createPedido(E e) {
-        Pedido pedido  = (Pedido) getById(e.getId());
-        Cliente cliente;
-        cliente =  (Cliente) getById(pedido.getCliente().getId());
-        pedido.setCliente(cliente);
-        System.out.println("service aqui");
-        return (E) this.repository.save(e);
     }
 
     @Override
-    public E update(E entityParaAtualizar, Long id) {
-        Optional<E> pessoaBanco = repository.findById(id);
+    public E update(E updatedEntity, Long id) {
 
-        if (pessoaBanco.isPresent()){
+        Optional<E> entity = repository.findById(id);
+        if (entity.isPresent()){
 
-            E entity = pessoaBanco.get();
+            E e = entity.get();
+            e.partialUpdate(updatedEntity);
 
-            entity.partialUpdate(entityParaAtualizar);
-
-            return (E) this.repository.save(entity);
+            return (E) this.repository.save(e);
         }else{
             throw  new EntityNotFoundException();
         }

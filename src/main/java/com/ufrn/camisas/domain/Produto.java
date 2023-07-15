@@ -2,6 +2,7 @@ package com.ufrn.camisas.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ufrn.camisas.controller.ProdutoController;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
@@ -32,8 +33,7 @@ public class Produto extends AbstractEntity {
     * Mapeamento ManyToMany
     * ## Testar ##
     * */
-    @ManyToMany(mappedBy = "produtos")
-    private List<Pedido> pedidos;
+
 
     @Override
     public void partialUpdate(AbstractEntity e) {
@@ -45,7 +45,7 @@ public class Produto extends AbstractEntity {
             }
             this.nomeProduto = produto.nomeProduto;
             this.precoProduto = produto.precoProduto;
-            this.pedidos = produto.pedidos;
+
         }
     }
 

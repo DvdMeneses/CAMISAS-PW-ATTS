@@ -2,6 +2,7 @@ package com.ufrn.camisas.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ufrn.camisas.controller.ClienteController;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

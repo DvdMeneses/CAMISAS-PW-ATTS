@@ -9,5 +9,9 @@ import org.springframework.stereotype.Service;
 public class ProdutoService extends GenericService<Produto, IProdutoRepository> {
     public ProdutoService(IProdutoRepository repository) {
         super(repository);
+
+
     }
+
+
 }

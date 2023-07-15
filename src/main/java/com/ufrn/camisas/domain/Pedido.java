@@ -1,5 +1,6 @@
 package com.ufrn.camisas.domain;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import com.ufrn.camisas.controller.PedidoController;
 import com.ufrn.camisas.service.ClienteService;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.SQLSelect;
 import org.modelmapper.ModelMapper;
@@ -18,8 +20,6 @@ import org.springframework.hateoas.RepresentationModel;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Entity
 public class Pedido extends AbstractEntity {
@@ -30,18 +30,16 @@ public class Pedido extends AbstractEntity {
     /* Um cliente pode ter muitos pedidos e um pedido so é para um cliente*/
     @ManyToOne
     @JoinColumn(name = "id_cliente")
-    private Cliente cliente;
+     Cliente cliente;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "pedido_produtos",
+            joinColumns = @JoinColumn(name = "id_pedido", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "id_produto", referencedColumnName = "id")
+    )
 
-    /*
-    * Correção: adição do 'referencedColumnName' - referência da coluna 'id_pedido' com o id de Pedido.class
-    * ## Testar ##
-    * */
-    @ManyToMany
-    @JoinTable(name = "pedido_produtos",
-            joinColumns = {@JoinColumn(name = "id_pedido", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "id_produto", referencedColumnName = "id")})
-    private List<Produto> produtos;
+     List<Produto> produtos;
 
 
     @Override
@@ -61,15 +59,18 @@ public class Pedido extends AbstractEntity {
     * */
     @Data
     public static class DtoRequest {
-        @NotBlank(message = "Cliente inexistente.")
-        private Cliente cliente;
+        //@NotNull(message = "Cliente inexistente.")
+        Cliente cliente;
 
-        @NotBlank(message = "Produtos inexistentes.")
-        private List<Produto> produtos;
+        //@NotNull(message = "Produtos inexistentes.")
+        List<Long> id_produto;
 
         public static Pedido convertToEntity(DtoRequest dto, ModelMapper mapper) {
+
             return mapper.map(dto, Pedido.class);
         }
+
+
     }
     @Data
     public static class DtoResponse extends RepresentationModel<DtoResponse>{
