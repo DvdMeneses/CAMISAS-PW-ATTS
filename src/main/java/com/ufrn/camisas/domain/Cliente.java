@@ -25,26 +25,21 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class Cliente extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id; // Corrigido: adicionada a definição do ID
-
+    Long id;
     @NotBlank(message = "Nome em Branco")
     String nome;
     @NotBlank
-    String cpf; // Corrigido: alterado o tipo para Date
+    String cpf;
 
-    /*
-    * Correção: adicionado @JoinColumn
-    * */
     @OneToMany
     @JoinColumn(name = "id_cliente")
     List<Pedido> pedidos;
 
     @Override
     public void partialUpdate(AbstractEntity e) {
-        if (e instanceof Cliente cliente){// tratamento para nao nulo
-            if(cliente.nome.equals("Nome em Branco") || cliente.cpf == null){
-
-                throw new NullPointerException ("campo null invalido");
+        if (e instanceof Cliente cliente){
+            if(cliente.nome.equals("NOME EM BRANCO") || cliente.cpf == null){
+                throw new NullPointerException ("CAMPO NULL INVALIDO");
             }
             this.nome = cliente.nome;
             this.cpf = cliente.cpf;

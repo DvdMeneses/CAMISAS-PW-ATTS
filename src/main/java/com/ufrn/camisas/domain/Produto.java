@@ -24,36 +24,24 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Entity
 public class Produto extends AbstractEntity {
 
-    private String nomeProduto;
-
-   @NotNull
-    private Integer precoProduto;
-
-    /*
-    * Mapeamento ManyToMany
-    * ## Testar ##
-    * */
-
+    String nomeProduto;
+    Integer precoProduto;
 
     @Override
     public void partialUpdate(AbstractEntity e) {
         if (e instanceof Produto produto){
-
-            if(produto.nomeProduto.equals("Nome em Branco") || produto.precoProduto == 0){
-
-                throw new NullPointerException ("campo null invalido");
+            if(produto.nomeProduto.equals("NOME EM BRANCO") || produto.precoProduto == 0){
+                throw new NullPointerException ("CAMPO NULL INVALIDO");
             }
             this.nomeProduto = produto.nomeProduto;
             this.precoProduto = produto.precoProduto;
-
         }
     }
-
     @Data
     public static class DtoRequest {
-        @NotBlank(message = "Produto com nome em branco")
+        @NotBlank(message = "PRODUTO COM NOME EM BRANCO")
         String nomeProduto;
-        @NotNull(message = "Produto com preco vazio")
+        @NotNull(message = "PRODUTO COM PRECO NULO")
         Integer precoProduto;
 
         public static Produto convertToEntity(DtoRequest dto, ModelMapper mapper) {
@@ -76,5 +64,4 @@ public class Produto extends AbstractEntity {
             add(linkTo(ProdutoController.class).slash(id).withRel("delete"));
         }
     }
-
 }
