@@ -23,7 +23,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Data
 @Entity
 public class Produto extends AbstractEntity {
-
     String nomeProduto;
     Integer precoProduto;
 

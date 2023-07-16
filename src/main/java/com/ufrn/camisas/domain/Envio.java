@@ -16,24 +16,18 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Data
 @Entity
 public class Envio extends AbstractEntity{
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Corrigido: adicionada a definição do ID
-    @NotNull(message = "Forma de Envio vazia")
-    private String formaEnvio;
-    @NotNull
-    private String endereco;
+    String formaEnvio;
+    String endereco;
 
     @OneToOne
-    @JoinColumn(name = "codigo_pedido", referencedColumnName = "id")
-    private Pedido pedido;
+    @JoinColumn(name = "pedido_id", referencedColumnName = "id")
+    Pedido pedido;
 
     @Override
     public void partialUpdate(AbstractEntity e) {
         if (e instanceof Envio envio){// tratamento para nao nulo
-            if(envio.formaEnvio.equals("Forma de Envio vazia") || envio.endereco == null){
-                throw new RuntimeException("campo null invalido");
+            if(envio.formaEnvio.equals("FORMA DE ENVIO NULO") || envio.endereco == null){
+                throw new RuntimeException("CAMPO NULO INVALIDO");
             }
             this.formaEnvio = envio.formaEnvio;
             this.endereco = envio.endereco;
@@ -43,22 +37,24 @@ public class Envio extends AbstractEntity{
 
     @Data
     public static class DtoRequest {
-        @NotBlank(message = "CAMPO OBRIGATORIO - ENVIO")
-        private String formaEnvio;
+        @NotBlank(message = "CAMPO OBRIGATORIO: formaEnvio")
+        String formaEnvio;
 
-        @NotBlank(message = "CAMPO OBRIGATORIO - ENDERECO")
-        private String endereco;
+        @NotBlank(message = "CAMPO OBRIGATORIO: endereco")
+        String endereco;
+
+        @NotNull(message = "CAMPO OBRIGATORIO: pedido_id")
+        Long pedido_id;
 
         public static Envio convertToEntity(DtoRequest dto, ModelMapper mapper){
             return mapper.map(dto, Envio.class);
         }
-
     }
 
     @Data
     public static class DtoResponse extends RepresentationModel<DtoResponse> {
-        private String formaEnvio;
-        private String endereco;
+        String formaEnvio;
+        String endereco;
 
         public static  DtoResponse convertToDto(Envio e, ModelMapper mapper){
             return  mapper.map(e, DtoResponse.class);
@@ -69,7 +65,5 @@ public class Envio extends AbstractEntity{
             add(linkTo(EnvioController.class).withRel("envio"));
             add(linkTo(EnvioController.class).slash(id).withRel("delete"));
         }
-
-
     }
 }

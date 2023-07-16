@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ufrn.camisas.controller.EnvioController;
 import com.ufrn.camisas.domain.Cliente;
 import com.ufrn.camisas.domain.Produto;
@@ -13,7 +14,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLSelect;
+import org.hibernate.annotations.Where;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -22,20 +25,24 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
+@SQLDelete(sql = "UPDATE cliente SET deleted_at = CURRENT_TIMESTAMP WHERE id=?")
+@Where(clause = "deleted_at is null")
 public class Pedido extends AbstractEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
+    @JsonIgnore //Para evitar recursão infinita
     @ManyToOne
-    @JoinColumn(name = "id_cliente")
-     Cliente cliente;
+    @JoinColumn(name = "cliente_id")
+    Cliente cliente;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "pedido_produtos",
-            joinColumns = @JoinColumn(name = "id_pedido", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_produto", referencedColumnName = "id")
+            joinColumns = @JoinColumn(name = "pedido_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "produto_id", referencedColumnName = "id")
     )
     List<Produto> produtos;
 
@@ -53,7 +60,7 @@ public class Pedido extends AbstractEntity {
     @Data
     public static class DtoRequest {
         Cliente cliente;
-        ArrayList<Long> id_produtos;
+        ArrayList<Long> produtos_id;
         public static Pedido convertToEntity(DtoRequest dto, ModelMapper mapper) {
             return mapper.map(dto, Pedido.class);
         }

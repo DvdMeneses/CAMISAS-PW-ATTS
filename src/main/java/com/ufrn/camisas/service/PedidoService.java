@@ -7,7 +7,6 @@ import com.ufrn.camisas.domain.Pedido;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Service
 public class PedidoService extends GenericService<Pedido, IPedidoRepository> {
 

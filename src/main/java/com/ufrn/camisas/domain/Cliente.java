@@ -50,10 +50,10 @@ public class Cliente extends AbstractEntity {
     @Data
     public static class DtoRequest {
         @NotBlank(message = "Nome em Branco")
-        private String nome;
+        String nome;
 
         @NotBlank(message = "Data não cadastrada")
-        private String cpf;
+        String cpf;
 
         public static Cliente convertToEntity(DtoRequest dto, ModelMapper mapper) {
             return mapper.map(dto, Cliente.class);
@@ -62,8 +62,8 @@ public class Cliente extends AbstractEntity {
 
     @Data
     public static class DtoResponse extends RepresentationModel<DtoResponse> {
-        private String nome;
-        private String cpf;
+        String nome;
+        String cpf;
 
         public static DtoResponse convertToDto(Cliente c, ModelMapper mapper) {
             return mapper.map(c, DtoResponse.class);
@@ -73,9 +73,6 @@ public class Cliente extends AbstractEntity {
             add(linkTo(ClienteController.class).slash(id).withSelfRel());
             add(linkTo(ClienteController.class).withRel("cliente"));
             add(linkTo(ClienteController.class).slash(id).withRel("delete"));
-
-
         }
-
     }
 }
