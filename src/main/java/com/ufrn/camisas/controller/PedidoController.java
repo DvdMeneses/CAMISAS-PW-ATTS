@@ -1,9 +1,8 @@
 package com.ufrn.camisas.controller;
 
-import com.ufrn.camisas.domain.Cliente;
+
 import com.ufrn.camisas.domain.Produto;
 import com.ufrn.camisas.repository.IProdutoRepository;
-import com.ufrn.camisas.service.ProdutoService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pedidos")
+@RequestMapping("/pedidos/")
 public class PedidoController {
 
     PedidoService service;
@@ -30,20 +29,20 @@ public class PedidoController {
     }
 
     /*
-    * Criar pedido
-    * */
+     * Criar pedido
+     * */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Pedido.DtoResponse create(@RequestBody Pedido.DtoRequest p){
         Pedido pedido = Pedido.DtoRequest.convertToEntity(p, mapper);
         List<Produto> listaProdutos = new ArrayList<>();
 
-        if(p.getId_produtos()!=null){
-            for (Long i : p.getId_produtos()){
+        if(p.getProdutos_id()!=null){
+            for (Long i : p.getProdutos_id()){
                 listaProdutos.add(produtoRepository.findById(i).get());
             }
         }else{
-            System.out.println("A LISTA DE IDS ESTA NULA");
+            System.out.println("LISTAPRODUTOS NULA");
         }
 
         pedido.setProdutos(listaProdutos);
@@ -54,8 +53,8 @@ public class PedidoController {
     }
 
     /*
-    * Listar pedidos
-    * */
+     * Listar pedidos
+     * */
     @GetMapping
     public List<Pedido.DtoResponse> list() {
         return service.listPedidos();
@@ -73,8 +72,8 @@ public class PedidoController {
     */
 
     /*
-    * Buscar pedido por id
-    * */
+     * Buscar pedido por id
+     * */
     @GetMapping("/{id}")
     public ResponseEntity<Pedido.DtoResponse> getPedidoById(@PathVariable Long id) {
         Pedido pedido = (Pedido) service.getById(id);
@@ -95,8 +94,8 @@ public class PedidoController {
     }*/
 
     /*
-    * Atualizar pedido
-    * */
+     * Atualizar pedido
+     * */
     @PutMapping("/{id}")
     public ResponseEntity<Pedido.DtoResponse> updatePedido(@PathVariable Long id, @Valid @RequestBody Pedido.DtoRequest dtoRequest) {
         Pedido existingPedido = (Pedido) service.getById(id);
@@ -120,8 +119,8 @@ public class PedidoController {
     }*/
 
     /*
-    * Deletar pedido
-    * */
+     * Deletar pedido
+     * */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
         service.delete(id);

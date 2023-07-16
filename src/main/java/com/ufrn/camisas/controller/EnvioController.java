@@ -23,14 +23,14 @@ public class EnvioController {
         this.mapper = mapper;
     }
 
-
     /*
     * Criar envio
     * */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Envio.DtoResponse create(@RequestBody @Valid Envio.DtoRequest e){
-        Envio envio = this.service.create(Envio.DtoRequest.convertToEntity( e, mapper));
+        Envio envio = this.service.preencherEnvio(e.getFormaEnvio(), e.getEndereco(), e.getPedido_id());
+        this.service.create(envio);
         Envio.DtoResponse response = Envio.DtoResponse.convertToDto(envio,mapper);
         response.generateLinks(envio.getId());
         return response;
@@ -78,7 +78,4 @@ public class EnvioController {
     public void delete(@PathVariable Long id){
         this.service.delete(id);
     }
-
-
-
 }
