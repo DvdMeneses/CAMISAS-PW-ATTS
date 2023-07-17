@@ -34,9 +34,27 @@ public class ProdutoController {
         return response;
     }
 
+    //jotinha adicionou
+    @GetMapping
+    public ResponseEntity<Page<Produto.DtoResponse>> find(Pageable page) {
+
+
+
+        Page<Produto.DtoResponse> dtoResponses = service
+                .find(page)
+                .map(record -> {
+                    Produto.DtoResponse response = Produto.DtoResponse.convertToDto(record, mapper);
+                    response.generateLinks(record.getId());
+                    return response;
+                });
+
+
+        return new ResponseEntity<>(dtoResponses, HttpStatus.OK);
+    }
+
     /*
      * Listagem de produto
-     * */
+     *
     @GetMapping
     public List<Produto.DtoResponse> list(){
         return this.service.list().stream().map(

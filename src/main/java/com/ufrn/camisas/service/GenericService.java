@@ -6,9 +6,12 @@ import com.ufrn.camisas.domain.Pedido;
 import com.ufrn.camisas.domain.Produto;
 import com.ufrn.camisas.repository.IGenericRepository;
 import jakarta.persistence.EntityNotFoundException;
-
 import java.util.List;
 import java.util.Optional;
+
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public abstract class GenericService<E extends AbstractEntity, R extends IGenericRepository> implements IGenericService<E>{
 
@@ -16,6 +19,12 @@ public abstract class GenericService<E extends AbstractEntity, R extends IGeneri
 
     public GenericService(R repository) {
         this.repository = repository;
+    }
+
+
+    @Override
+    public Page<E> find(Pageable page) {
+        return (Page<E>) this.repository.findAll(page);
     }
 
 
@@ -34,7 +43,6 @@ public abstract class GenericService<E extends AbstractEntity, R extends IGeneri
     @Override
     public E create(E e){
         return (E) this.repository.save(e);
-
     }
 
     @Override
