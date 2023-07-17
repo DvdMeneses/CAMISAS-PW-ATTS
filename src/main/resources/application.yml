@@ -13,3 +13,15 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
+rsa :
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
+
+
+
+cors:
+    allowed-origins: "http://127.0.0.1:5173/"
+    allowed-methods: GET, POST, PUT, DELETE
+    allowed-headers: "*"
+    allow-credentials: true
+    max-age: 3600

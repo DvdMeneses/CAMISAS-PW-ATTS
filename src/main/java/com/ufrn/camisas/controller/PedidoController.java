@@ -1,7 +1,9 @@
 package com.ufrn.camisas.controller;
 
 
+import com.ufrn.camisas.domain.Cliente;
 import com.ufrn.camisas.domain.Produto;
+import com.ufrn.camisas.repository.IClienteRepository;
 import com.ufrn.camisas.repository.IProdutoRepository;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -14,6 +16,7 @@ import com.ufrn.camisas.service.PedidoService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/pedidos/")
@@ -22,20 +25,23 @@ public class PedidoController {
     PedidoService service;
     ModelMapper mapper;
     IProdutoRepository produtoRepository;
-    public PedidoController(PedidoService service, ModelMapper mapper, IProdutoRepository produtoRepository){
+    IClienteRepository clienteRepository;
+    public PedidoController(PedidoService service, ModelMapper mapper, IProdutoRepository produtoRepository,IClienteRepository clienteRepository){
         this.service = service;
         this.mapper = mapper;
         this.produtoRepository = produtoRepository;
+        this.clienteRepository = clienteRepository;
     }
 
     /*
-     * Criar pedido
-     * */
+    * Criar pedido
+    * */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Pedido.DtoResponse create(@RequestBody Pedido.DtoRequest p){
         Pedido pedido = Pedido.DtoRequest.convertToEntity(p, mapper);
         List<Produto> listaProdutos = new ArrayList<>();
+        Optional<Cliente> cliente = clienteRepository.findById(p.getCliente().getId());
 
         if(p.getProdutos_id()!=null){
             for (Long i : p.getProdutos_id()){
@@ -44,7 +50,9 @@ public class PedidoController {
         }else{
             System.out.println("LISTAPRODUTOS NULA");
         }
-
+        if(cliente.isPresent()){
+            pedido.setCliente(cliente.get());
+        }
         pedido.setProdutos(listaProdutos);
         Pedido.DtoResponse response = Pedido.DtoResponse.convertToDto((Pedido) this.service.create(pedido),mapper);
         response.generateLinks(pedido.getId());
@@ -119,8 +127,8 @@ public class PedidoController {
     }*/
 
     /*
-     * Deletar pedido
-     * */
+    * Deletar pedido
+    * */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
         service.delete(id);
