@@ -43,6 +43,7 @@ public class Produto extends AbstractEntity {
         @NotNull(message = "PRODUTO COM PRECO NULO")
         Integer precoProduto;
 
+
         public static Produto convertToEntity(DtoRequest dto, ModelMapper mapper) {
             return mapper.map(dto, Produto.class);
         }

@@ -14,7 +14,6 @@ public abstract class GenericService<E extends AbstractEntity, R extends IGeneri
 
     R repository;
 
-
     public GenericService(R repository) {
         this.repository = repository;
     }
@@ -28,7 +27,7 @@ public abstract class GenericService<E extends AbstractEntity, R extends IGeneri
         if (pessoaBanco.isPresent()){
             return (E) pessoaBanco.get();
         }else{
-            throw  new EntityNotFoundException();
+            throw new EntityNotFoundException();
         }
     }
 
