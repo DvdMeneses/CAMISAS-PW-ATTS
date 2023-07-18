@@ -57,27 +57,22 @@ public class SecurityConfig {
             "/actuator/*",
             "/swagger-ui/**",
             "/token",
-            "/produtos/**",
-            "/clientes/**",
-            "/clientes/",
-            "/produtos/",
-            "/pedidos/",
-            "/pedidos/**",
-            "/envio/",
-            "/envio/",
-            "/envio/**"
+            "*/usuario",
+            "/usuario",
+            "/clientes",
+            "/produtos",
+            "/pedidos/"
     };
 
     public SecurityConfig(RsaKeyProperties rsaKeys) {
-
         this.rsaKeys = rsaKeys;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService/*, BCryptPasswordEncoder encoder*/) {
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, BCryptPasswordEncoder encoder) {
         var authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        //authProvider.setPasswordEncoder(encoder);
+        authProvider.setPasswordEncoder(encoder);
         return new ProviderManager(authProvider);
     }
 
@@ -121,13 +116,13 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-
         return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
     }
 
     @Bean
     public Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+        // Configurar o conversor, se necessário
         return converter;
     }
 
@@ -135,7 +130,7 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://127.0.0.1:5173/");
+        config.addAllowedOrigin("*");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         source.registerCorsConfiguration("/**", config);

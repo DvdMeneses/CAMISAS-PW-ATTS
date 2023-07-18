@@ -20,7 +20,7 @@ rsa :
 
 
 cors:
-    allowed-origins: "http://127.0.0.1:5173/"
+    allowed-origins: "*"
     allowed-methods: GET, POST, PUT, DELETE
     allowed-headers: "*"
     allow-credentials: true

@@ -20,12 +20,13 @@ public class TokenService {
     }
 
     public String generateToken(Authentication authentication) {
+
         Instant now = Instant.now();
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("ApiRestDemo")
+                .issuer("CAMISAS-PW")
                 .issuedAt(now)
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .subject(authentication.getName())

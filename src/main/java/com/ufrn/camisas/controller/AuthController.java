@@ -22,11 +22,18 @@ public class AuthController {
 
     @PostMapping("/token")
     public String token(@RequestBody LoginDTO loginDTO) {
+        System.out.println(loginDTO.password());
         Authentication authentication = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(loginDTO.username(), loginDTO.password())
                 );
-
+        System.out.println(loginDTO.username());
         return tokenService.generateToken(authentication);
     }
+
+
+
 }
+
+
+
