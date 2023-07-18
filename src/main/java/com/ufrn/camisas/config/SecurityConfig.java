@@ -75,7 +75,10 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(encoder);
         return new ProviderManager(authProvider);
     }
-
+    @Bean
+    public BCryptPasswordEncoder encoder(){
+        return new BCryptPasswordEncoder();
+    }
     @Bean
     public UserDetailsService users() {
         return new InMemoryUserDetailsManager(
